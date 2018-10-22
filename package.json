@@ -1,0 +1,21 @@
+{
+  "name": "chat-rooms",
+  "version": "1.0.0",
+  "description": "Web Chat App",
+  "main": "server.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tsukeroman/chat-rooms.git"
+  },
+  "author": "R Ts",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tsukeroman/chat-rooms/issues"
+  },
+  "homepage": "https://github.com/tsukeroman/chat-rooms#readme",
+  "proxy": "http://localhost:5000"
+
+}
