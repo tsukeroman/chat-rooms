@@ -16,6 +16,10 @@
     "url": "https://github.com/tsukeroman/chat-rooms/issues"
   },
   "homepage": "https://github.com/tsukeroman/chat-rooms#readme",
-  "proxy": "http://localhost:5000"
-
+  "proxy": "http://localhost:5000",
+  "dependencies": {
+    "express": "4.16.4",
+    "mongodb": "3.1.8",
+    "socket.io": "2.1.1"
+  }
 }
