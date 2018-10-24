@@ -16,9 +16,16 @@ app.get('/', function(req, res){
 
 io.on('connection', function(socket) {
     console.log(socket.id);
+    /*socket.emit('connected');
+    socket.on('user connected', function(data) {
+        io.emit('user connected', data);
+    })*/
     socket.on('chat message', function(msg){
         io.emit('chat message', msg);
     });
+    /*socket.on('disconnect', function(username) {
+        io.emit(username + 'is now disconnected')
+    })*/
 });
 
 http.listen(port, () => {

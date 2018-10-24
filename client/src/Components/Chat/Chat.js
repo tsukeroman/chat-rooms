@@ -17,10 +17,16 @@ class Chat extends Component {
         this.socket.on('chat message', function(data) {
             addMessage(data);
         });
-
+/*
+        this.socket.on('connected', function() {
+            this.socket.emit('user connected', {
+                username: this.props.username
+            });
+        });
+*/
         const addMessage = data => {
             console.log(data);
-            this.setState({ messages: [...this.state.messages, this.props.username +': ' + data.message] });
+            this.setState({ messages: [...this.state.messages, data] });
             console.log(this.state.messages);
         };
     }
@@ -32,7 +38,8 @@ class Chat extends Component {
     handleSubmit = (event) => {
         event.preventDefault();
         this.socket.emit('chat message', {
-            message: this.state.message
+            message: this.state.message,
+            username: this.props.username
         });
         this.setState({
             message: ''
@@ -44,8 +51,12 @@ class Chat extends Component {
         <div className="Chat">
             <ul className="messages">
                 {this.state.messages.map(item => {
+                    let msg = item.username + ': ' + item.message;;
+                    if (item.username === this.props.username) {
+                        msg = <b>{msg}</b>
+                    }
                     return (
-                        <li key={uuid.v4()}>{item}</li>
+                        <li key={uuid.v4()}>{msg}</li>
                     )
                 })}
             </ul>
