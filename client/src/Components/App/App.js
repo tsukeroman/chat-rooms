@@ -26,6 +26,10 @@ class App extends Component {
     this.setState({ chatType: 'public' })
   };
 
+  backToMain = () => {
+    this.setState({ chatType: '' })
+  }
+
   render() {
     if (this.state.username === '') {
       return (
@@ -43,7 +47,11 @@ class App extends Component {
         } else {
           return ( 
             <div className="App">
-                <Chat username={this.state.username} />
+                <Chat 
+                  username={this.state.username}
+                  secret_name='SeRvEr12St_%3+FX99#s#*s*MERCURy'
+                  backToMain={this.backToMain}
+                />
             </div>
           );
         }
