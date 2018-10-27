@@ -16,20 +16,25 @@ app.get('/', function(req, res){
 });
 
 io.on('connection', function(socket) {
-    console.log(socket.id);
-    //const obj = { 'id': socket.id, username }
-    users = [...users, socket.id]
+    
+    //console.log(socket.id);
+    console.log(socket.handshake.query.username);
+    
+    //users = [...users, socket.id]
+    users = [...users, socket.handshake.query.username]
+
     io.emit('connected', users);
-    /*socket.on('user connected', function(data) {
-        io.emit('user connected', data);
-    })*/
     socket.on('chat message', function(msg){
         io.emit('chat message', msg);
     });
     
-    socket.on('disconnect', function() {
+    /*socket.on('disconnect', function() {
         users = users.filter(item => item !== socket.id);
         io.emit('disconnect', { users, 'user': socket.id });
+    })*/
+    socket.on('disconnect', function() {
+        users = users.filter(item => item !== socket.handshake.query.username);
+        io.emit('disconnect', { users, 'user': socket.handshake.query.username });
     })
 });
 

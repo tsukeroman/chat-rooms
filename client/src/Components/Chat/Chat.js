@@ -13,7 +13,7 @@ class Chat extends Component {
             users: []
         }
 
-        this.socket = io('localhost:5000');
+        this.socket = io('localhost:5000', { query: `username=${this.props.username}`});
 
         this.socket.on('connected', function(data) {
             userConnected(data);
@@ -26,13 +26,7 @@ class Chat extends Component {
         this.socket.on('chat message', function(data) {
             addMessage(data);
         });
-/*
-        this.socket.on('connected', function() {
-            this.socket.emit('user connected', {
-                username: this.props.username
-            });
-        });
-*/
+
         const addMessage = data => {
             console.log(data);
             this.setState({ messages: [...this.state.messages, data] });
@@ -41,19 +35,24 @@ class Chat extends Component {
 
         const userConnected = data => {
             console.log(data);
-            const msg = { 
-                'username': this.props.secret_name, 
-                'message': `${data[data.length-1]} is now connected`
-            };
-            this.setState({ 
-                users: data,
-                messages: [...this.state.messages, msg ]
-            });
+            if (data[data.length-1] !== this.props.username) {
+                const msg = { 
+                    'username': this.props.secret_name, 
+                    'message': `${data[data.length-1]} is now connected`
+                };
+                this.setState({ 
+                    users: data,
+                    messages: [...this.state.messages, msg ]
+                }); 
+            } else {
+                this.setState({
+                    users: data
+                });
+            }
             console.log(this.state.users);
         };
 
         const userDisconnected = data => {
-            console.log(data);
             const msg = { 
                 'username': this.props.secret_name, 
                 'message': `${data.user} has left the chat`
@@ -62,7 +61,6 @@ class Chat extends Component {
                 users: data.users,
                 messages: [...this.state.messages, msg ]
             });
-            console.log(this.state.users);
         };
     }
 
@@ -82,7 +80,7 @@ class Chat extends Component {
     }
 
     backToMain = () => {
-        //this.socket.emit('disconnect');
+        this.socket.disconnect();
         this.props.backToMain();
     }
 

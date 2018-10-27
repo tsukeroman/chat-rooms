@@ -54,6 +54,7 @@
     float: right; 
     padding: 8px;
     width: 70px;
+    
 }
 
 .input {
@@ -87,6 +88,7 @@ input:focus {
     position: fixed;
     top: 20px;
     left: 50px;
+    cursor: context-menu;
 }
 
 .users {
@@ -95,6 +97,7 @@ input:focus {
 }
 
 .user {
+    padding-left: 10px;
     text-align: left;
     cursor: context-menu;
 }
@@ -105,4 +108,5 @@ input:focus {
     bottom: 30px;
     left: 60px;
     padding: 10px;
+    cursor: pointer;
 }
