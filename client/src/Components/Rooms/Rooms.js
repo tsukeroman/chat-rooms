@@ -10,8 +10,93 @@ class Rooms extends Component {
     this.state = {
         toRoom: '',
         roomName: '',
-        Rooms: ['Room1', 'Room2', 'Room3']
+        Rooms: [],
+        password: '',
+        noInfoErr: false
     }
+  }
+
+  componentDidMount() {
+    this.getRooms();
+  }
+
+  componentWillReceiveProps() {
+      this.getRooms();
+  }
+
+  handleInputChange = (event) => {
+      if (event.target.name === "roomName") {
+          this.setState({ roomName: event.target.value })
+      } else {
+          if (event.target.name === "password") {
+              this.setState({ password: event.target.value })
+          }
+      }
+  }
+
+  getRooms = () => {
+      fetch('/getRooms')
+        .then(res => res.json())
+        .then(res => this.setState({ Rooms: res.Rooms }))
+  }
+
+  createRoom = (event) => {
+    event.preventDefault();
+    //console.log(this.statevent.preventDefault();e.roomName);
+
+    if (this.state.roomName === '' || this.state.password === '') {
+        this.setState({ noInfoErr: true });
+        return;
+    } else {
+        fetch('/newRoom', {
+            method: 'post',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ 
+                roomName: this.state.roomName, 
+                password: this.state.password 
+            })
+        })
+            .then(res => res.json())
+            .then(res => this.setState({ 
+                Rooms: res.Rooms,
+                toRoom: '',
+                roomName: '',
+                password: ''
+            }));
+    }  
+  }
+
+  enterRoom = (event) => {
+    event.preventDefault();
+    fetch('/enterRoom', {
+        method: 'post',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ 
+            roomName: this.state.roomName, 
+            password: this.state.password 
+        })
+    })
+        .then(res => res.json())
+        .then(res => {
+            if (res.success) {
+                console.log('Connected :P');
+                this.props.privateName(this.state.roomName);
+            } else {
+                console.log('Wrong password :/');
+                this.setState({
+                    toRoom: '',
+                    roomName: '',
+                    password: ''
+                })
+            }
+        })
+
   }
 
   backToMain = () => {
@@ -32,14 +117,36 @@ class Rooms extends Component {
                 <div className="ProceedToRoom">
                     <div className="ProceedContent">
                         CREATE ROOM
-                        <form>
-                            <input type="text" />
+                        <form onSubmit={this.createRoom}>
+                            <input 
+                                type="text" 
+                                value={this.state.roomName}
+                                name="roomName"
+                                onChange={this.handleInputChange} 
+                            />
                             <br />
-                            <input type="password" />
+                            <input 
+                                type="password" 
+                                value={this.state.password}
+                                name="password"
+                                onChange={this.handleInputChange} 
+                            />
                             <br />
+                            {this.state.noInfoErr ? 
+                                <div className="infoErr">Submit room name and password</div>
+                                :
+                                <div></div>    
+                            }
                             <input type="submit" value="Create" />
                             <button 
-                                onClick={() => this.setState({ toRoom: '' })}
+                                onClick={(event) => {
+                                    this.setState({ 
+                                        toRoom: '',
+                                        roomName: '',
+                                        password: '', 
+                                        noInfoErr: false
+                                    }, event.preventDefault())}
+                                }
                             >
                                 Cancel
                             </button>
@@ -52,13 +159,22 @@ class Rooms extends Component {
             proceed = (
                 <div className="ProceedToRoom">
                     <div className="ProceedContent">
-                        <form>
+                        <form onSubmit={this.enterRoom}>
                             <p>{this.state.roomName}</p>
-                            <input type="password" />
+                            <input 
+                                type="password" 
+                                value={this.state.password}
+                                name="password"
+                                onChange={this.handleInputChange} 
+                            />
                             <br />
                             <input type="submit" value="Enter" />
                             <button 
-                                onClick={() => this.setState({ toRoom: '' })}
+                                onClick={(event) => this.setState({ 
+                                    toRoom: '',
+                                    roomName: '',
+                                    password: '', 
+                                }, event.preventDefault())}
                             >
                                 Cancel
                             </button>
@@ -79,11 +195,19 @@ class Rooms extends Component {
                     Create Room
                 </button>
                 <br />
+                <button 
+                    className="RoomsButton"
+                    onClick={this.getRooms}
+                >
+                    Refresh Rooms
+                </button>
+                <br />
                 <button className="RoomsButton" onClick={this.backToMain}>
                     Back to main
                 </button>
             </div>
             <div className="ChooseRoom">
+                <br />
                 {this.state.Rooms.map(item => 
                     <Room 
                         key={uuid.v4()}

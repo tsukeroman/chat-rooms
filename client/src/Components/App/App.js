@@ -11,12 +11,17 @@ class App extends Component {
 
     this.state = {
       username: '',
-      chatType: ''
+      chatType: '',
+      chatName: ''
     }
   }
 
   submitName = (username) => {
     this.setState({ username })
+  };
+
+  privateName = (name) => {
+    this.setState({ chatName: name })
   };
 
   privateType = () => {
@@ -28,7 +33,10 @@ class App extends Component {
   };
 
   backToMain = () => {
-    this.setState({ chatType: '' })
+    this.setState({ 
+      chatType: '',
+      chatName: ''
+    })
   }
 
   render() {
@@ -46,22 +54,39 @@ class App extends Component {
             </div>
           );
         } else {
-          if (this.state.chatType === 'private') {
+          if (this.state.chatType === 'public') {
             return (
               <div className="App">
-                <Rooms backToMain={this.backToMain} />
-              </div>
-            );
-          } else {
-            return ( 
-              <div className="App">
                   <Chat 
+                    chatName="public-chat"
                     username={this.state.username}
                     secret_name='SeRvEr12St_%3+FX99#s#*s*MERCURy'
                     backToMain={this.backToMain}
                   />
-              </div>
+              </div> 
             );
+          } else {
+              if (this.state.chatName === '') {
+                return ( 
+                  <div className="App">
+                    <Rooms 
+                      backToMain={this.backToMain}
+                      privateName={this.privateName} 
+                    />
+                  </div>
+                );
+              } else {
+                return (
+                  <div className="App">
+                      <Chat 
+                        chatName={this.state.chatName}
+                        username={this.state.username}
+                        secret_name='SeRvEr12St_%3+FX99#s#*s*MERCURy'
+                        backToMain={this.backToMain}
+                      />
+                  </div> 
+                );
+              }
           }
         }
       }
