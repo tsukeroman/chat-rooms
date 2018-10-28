@@ -1,0 +1,22 @@
+.Room {
+    border: 1px black solid;
+    border-radius: 15px;
+    padding: 10px 15px 0px 15px;
+    width: 250px;
+    height: 50px;
+    text-align: center;
+    cursor: pointer;
+    background: darkslategrey;
+    color: white;
+    margin-bottom: 20px;
+}
+
+/*
+.RoomButton {
+    background: rgb(32, 58, 58);;
+    color: darkgray;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 10px;
+    border: gray;
+}*/

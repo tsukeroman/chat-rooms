@@ -3,6 +3,7 @@ import Chat from '../Chat/Chat';
 import './App.css';
 import ChooseName from '../ChooseName/ChooseName';
 import ChooseType from '../ChooseType/ChooseType';
+import Rooms from '../Rooms/Rooms';
 
 class App extends Component {
   constructor(props) {
@@ -45,15 +46,23 @@ class App extends Component {
             </div>
           );
         } else {
-          return ( 
-            <div className="App">
-                <Chat 
-                  username={this.state.username}
-                  secret_name='SeRvEr12St_%3+FX99#s#*s*MERCURy'
-                  backToMain={this.backToMain}
-                />
-            </div>
-          );
+          if (this.state.chatType === 'private') {
+            return (
+              <div className="App">
+                <Rooms backToMain={this.backToMain} />
+              </div>
+            );
+          } else {
+            return ( 
+              <div className="App">
+                  <Chat 
+                    username={this.state.username}
+                    secret_name='SeRvEr12St_%3+FX99#s#*s*MERCURy'
+                    backToMain={this.backToMain}
+                  />
+              </div>
+            );
+          }
         }
       }
   }
