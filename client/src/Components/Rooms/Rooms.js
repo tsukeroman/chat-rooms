@@ -12,7 +12,8 @@ class Rooms extends Component {
         roomName: '',
         Rooms: [],
         password: '',
-        noInfoErr: false
+        noInfoErr: false,
+        passErr: false
     }
   }
 
@@ -29,7 +30,7 @@ class Rooms extends Component {
           this.setState({ roomName: event.target.value })
       } else {
           if (event.target.name === "password") {
-              this.setState({ password: event.target.value })
+              this.setState({ password: event.target.value, passErr: false })
           }
       }
   }
@@ -90,9 +91,7 @@ class Rooms extends Component {
             } else {
                 console.log('Wrong password :/');
                 this.setState({
-                    toRoom: '',
-                    roomName: '',
-                    password: ''
+                    passErr: true
                 })
             }
         })
@@ -174,11 +173,19 @@ class Rooms extends Component {
                                     toRoom: '',
                                     roomName: '',
                                     password: '', 
+                                    passErr: false
                                 }, event.preventDefault())}
                             >
                                 Cancel
                             </button>
                         </form>
+                        {this.state.passErr ?
+                            <div className="passErr">
+                                The password is incorrect
+                            </div>
+                            :
+                            null
+                        }
                     </div>
                 </div>
             );

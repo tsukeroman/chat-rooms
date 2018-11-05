@@ -13,7 +13,9 @@ class Chat extends Component {
             users: []
         }
 
-        this.socket = io('localhost:5000', { query: `username=${this.props.username}`});
+        this.socket = io('localhost:5000', { query: 
+            `username=${this.props.username}&chatname=${this.props.chatName}`
+        });
 
         this.socket.on('connected', function(data) {
             userConnected(data);
