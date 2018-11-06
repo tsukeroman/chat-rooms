@@ -13,7 +13,9 @@ class Rooms extends Component {
         Rooms: [],
         password: '',
         noInfoErr: false,
-        passErr: false
+        passErr: false,
+        nameErr: false,
+        existErr: false
     }
   }
 
@@ -43,7 +45,7 @@ class Rooms extends Component {
 
   createRoom = (event) => {
     event.preventDefault();
-    //console.log(this.statevent.preventDefault();e.roomName);
+    //console.log(this.state.roomName);
 
     if (this.state.roomName === '' || this.state.password === '') {
         this.setState({ noInfoErr: true });
@@ -61,12 +63,25 @@ class Rooms extends Component {
             })
         })
             .then(res => res.json())
-            .then(res => this.setState({ 
-                Rooms: res.Rooms,
-                toRoom: '',
-                roomName: '',
-                password: ''
-            }));
+            .then(res => {
+                if(res) {
+                    this.props.privateName(this.state.roomName);
+                    this.setState({ 
+                        Rooms: res.Rooms,
+                        toRoom: '',
+                        roomName: '',
+                        password: '',
+                        nameErr: false
+                    }) 
+                } else {
+                    this.getRooms();
+                    this.setState({ 
+                        roomName: '',
+                        password: '',
+                        nameErr: true
+                    }) 
+                }
+            })
     }  
   }
 
@@ -85,14 +100,21 @@ class Rooms extends Component {
     })
         .then(res => res.json())
         .then(res => {
-            if (res.success) {
+            if (res.success === 'Ok') {
                 console.log('Connected :P');
                 this.props.privateName(this.state.roomName);
             } else {
-                console.log('Wrong password :/');
-                this.setState({
-                    passErr: true
-                })
+                if (res.success === 'wrongPassword') {
+                    console.log('Wrong password :/');
+                    this.setState({
+                        passErr: true
+                    })
+                } else {
+                    console.log('Room doesnt esixt any more :/');
+                    this.setState({
+                        existErr: true
+                    })
+                }
             }
         })
 
@@ -143,7 +165,8 @@ class Rooms extends Component {
                                         toRoom: '',
                                         roomName: '',
                                         password: '', 
-                                        noInfoErr: false
+                                        noInfoErr: false,
+                                        nameErr: false
                                     }, event.preventDefault())}
                                 }
                             >
@@ -151,6 +174,15 @@ class Rooms extends Component {
                             </button>
                             
                         </form>
+                        {this.state.nameErr ?
+                            <div className="nameErr">
+                                A room with this name is already exist,
+                                <br />
+                                please choose another name.
+                            </div>
+                            :
+                            null
+                        }
                     </div>
                 </div>
             );
@@ -169,12 +201,17 @@ class Rooms extends Component {
                             <br />
                             <input type="submit" value="Enter" />
                             <button 
-                                onClick={(event) => this.setState({ 
-                                    toRoom: '',
-                                    roomName: '',
-                                    password: '', 
-                                    passErr: false
-                                }, event.preventDefault())}
+                                onClick={(event) => {
+                                    this.getRooms();
+                                    this.setState({ 
+                                        toRoom: '',
+                                        roomName: '',
+                                        password: '', 
+                                        passErr: false,
+                                        existErr: false
+                                    }, event.preventDefault());
+                                }
+                                }
                             >
                                 Cancel
                             </button>
@@ -182,6 +219,13 @@ class Rooms extends Component {
                         {this.state.passErr ?
                             <div className="passErr">
                                 The password is incorrect
+                            </div>
+                            :
+                            null
+                        }
+                        {this.state.existErr ?
+                            <div className="existErr">
+                                This room doesn't exist any more.
                             </div>
                             :
                             null

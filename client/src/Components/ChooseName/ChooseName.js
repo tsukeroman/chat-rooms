@@ -22,7 +22,6 @@ class ChooseName extends Component {
     return true;
   }
 
-
   handleChange = (event) => {
     this.setState({ username: event.target.value, nameErr: false });
   }
@@ -58,7 +57,7 @@ class ChooseName extends Component {
             Please try again.
           </div> 
           :
-          <div></div>
+          null
         }
       </div>
     );

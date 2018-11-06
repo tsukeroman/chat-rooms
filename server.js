@@ -7,26 +7,43 @@ const bodyParser = require('body-parser');
 
 const port = process.env.PORT || 5000; 
 let rooms = { 'public-chat': { 'users': [] } };
+let users = [];
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'client/build'))); 
 
+app.post('/userExist', function(req, res){
+    const { username, chatname } = req.body;
+    if (rooms[chatname]['users'].indexOf(username) !== -1) {
+        res.json(true);
+    } else {
+        res.json(false);
+    }
+});
+
 app.post('/newRoom', function(req, res){
     console.log(req.body);
     const { roomName, password } = req.body;
-    rooms[roomName] = { 'password': password, 'users': [] };
-    let roomNames = Object.keys(rooms)
-    roomNames=roomNames.filter(item => item !== 'public-chat');
-    res.json({ Rooms: roomNames });
+    if(rooms[roomName]) {
+        res.json(false);
+    } else {
+        rooms[roomName] = { 'password': password, 'users': [] };
+        let roomNames = Object.keys(rooms)
+        roomNames=roomNames.filter(item => item !== 'public-chat');
+        res.json({ Rooms: roomNames });
+    }
 });
 
 app.post('/enterRoom', function(req, res){
     console.log(req.body);
     const { roomName, password } = req.body;
-    let success = false;
-    if(rooms[roomName]['password'] === password) {
-        success = true;
+    let success = "wrongPassword";
+    if (!rooms[roomName]) {
+        success = "noExist";
+    }
+    else if(rooms[roomName]['password'] === password) {
+        success = "Ok";
     }
     res.json({ success });
 });
@@ -57,7 +74,13 @@ io.on('connection', function(socket) {
     
     socket.on('disconnect', function() {
         rooms[chatname]['users'] = rooms[chatname]['users'].filter(item => item !== username);
-        io.to(chatname).emit('disconnect', { 'users': rooms[chatname]['users'], 'user': username });
+        console.log(rooms[chatname]['users']);
+        if(rooms[chatname]['users'].length === 0 && chatname != 'public-chat') {
+            delete rooms[chatname];
+            console.log(`room ${chatname} was deleted`);
+        } else {
+            io.to(chatname).emit('disconnect', { 'users': rooms[chatname]['users'], 'user': username });
+        }
     })
 });
 

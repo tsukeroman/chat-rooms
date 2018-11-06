@@ -12,9 +12,15 @@ class App extends Component {
     this.state = {
       username: '',
       chatType: '',
-      chatName: ''
+      chatName: '',
+      publicNameErr: false
     }
   }
+
+  existInRoom = (username, chatname) => {
+    
+  }
+
 
   submitName = (username) => {
     this.setState({ username })
@@ -29,7 +35,34 @@ class App extends Component {
   };
 
   publicType = () => {
-    this.setState({ chatType: 'public' })
+    console.log('ENTERED');
+
+    fetch('/userExist', {
+      method: 'post',
+      headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ 
+          username: this.state.username,
+          chatname: 'public-chat'
+      })
+    })
+      .then(res => res.json())
+      .then(res => {
+        console.log(`res is ${res}`);
+        if(res === true) {
+          console.log('already exist');
+          this.setState({
+            chatType: '',
+            username: '',
+            publicNameErr: true 
+          })
+        } else {
+          console.log('doesnt exist');
+          this.setState({ chatType: 'public' })
+        }
+      })
   };
 
   backToMain = () => {
@@ -44,6 +77,17 @@ class App extends Component {
       return (
         <div className="App">
           <ChooseName submitName={this.submitName} />
+          { this.state.publicNameErr ?
+              <div className="takenErr">
+                There is already a user with the same name your
+                in the public chat room.
+                <br />
+                Please chose another name if you want to enter 
+                the public chat.
+              </div> 
+              :
+              null
+          }
         </div>
       );
     } else {

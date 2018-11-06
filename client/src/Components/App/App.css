@@ -7,3 +7,9 @@
   font-size: calc(10px + 2vmin);
   background: rgb(228, 227, 227);
 }
+
+.takenErr {
+  padding-top: 7px;
+  font-size: 15px;
+  color: darkred;
+}
