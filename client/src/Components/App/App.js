@@ -5,10 +5,20 @@ import ChooseName from '../ChooseName/ChooseName';
 import ChooseType from '../ChooseType/ChooseType';
 import Rooms from '../Rooms/Rooms';
 
+/*
+This is the main component of the application. It is responsible for rendering 
+the the components accordingly to application's state. 
+*/
+
 class App extends Component {
+  /*
+  The state maintains user's name, info about whether a user is in a chat room
+  at the moment or not, and if he is, then in which chat.
+  Also this component prevents a situation of two users with the same username
+  particicating in the public chat, by updating state's publicNameErr value.
+  */
   constructor(props) {
     super(props);
-
     this.state = {
       username: '',
       chatType: '',
@@ -17,23 +27,26 @@ class App extends Component {
     }
   }
 
-  existInRoom = (username, chatname) => {
-    
-  }
-
-
+  // This function sets user's name to the state
   submitName = (username) => {
     this.setState({ username })
   };
 
+  // This function sets private room's name to the state
   privateName = (name) => {
     this.setState({ chatName: name })
   };
 
+  // This function updates the state in case the user decided to use the private rooms
   privateType = () => {
     this.setState({ chatType: 'private' })
   };
 
+  /*
+  This function updates the state in case the user decided to use the public chat,
+  and it checks with the server whether there is no user with the same name using 
+  the public chat. In case there is, it allows the user to choose a new username.
+  */
   publicType = () => {
     fetch('/userExist', {
       method: 'post',
@@ -60,6 +73,10 @@ class App extends Component {
       })
   };
 
+  /*
+  This function is responsible for updating the state in the case the user
+  wants to come back to the main page, what causes App's re-render.
+  */
   backToMain = () => {
     this.setState({ 
       chatType: '',
@@ -67,6 +84,13 @@ class App extends Component {
     })
   }
 
+  /*
+  Here we use a conidtional rendering, according to the state.
+  It depends on:
+  1) whether the user chose a username
+  2) whether the user want to use the public chat or a private room
+  3) in case the user uses a private room, what room he uses
+  */
   render() {
     if (this.state.username === '') {
       return (
