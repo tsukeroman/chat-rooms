@@ -1,16 +1,12 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import './Room.css';
 
 class Room extends Component {
-  /*
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      name: this   
-    }
-  }
-  */
+  static propTypes = {
+    roomName: PropTypes.string,
+    openRoom: PropTypes.func
+  };
 
   openRoom = () => {
     this.props.openRoom(this.props.roomName);

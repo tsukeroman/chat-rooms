@@ -35,8 +35,6 @@ class App extends Component {
   };
 
   publicType = () => {
-    console.log('ENTERED');
-
     fetch('/userExist', {
       method: 'post',
       headers: {
@@ -50,16 +48,13 @@ class App extends Component {
     })
       .then(res => res.json())
       .then(res => {
-        console.log(`res is ${res}`);
         if(res === true) {
-          console.log('already exist');
           this.setState({
             chatType: '',
             username: '',
             publicNameErr: true 
           })
         } else {
-          console.log('doesnt exist');
           this.setState({ chatType: 'public' })
         }
       })

@@ -2,8 +2,16 @@ import React, { Component } from 'react';
 import io from 'socket.io-client';
 import uuid from 'uuid';
 import './Chat.css';
+import PropTypes from 'prop-types';
 
 class Chat extends Component {
+    static propTypes = {
+        chatName: PropTypes.string,
+        username: PropTypes.string,
+        secret_name: PropTypes.string,
+        backToMain: PropTypes.func
+    };
+
     constructor(props) {
         super(props);
 
@@ -30,13 +38,10 @@ class Chat extends Component {
         });
 
         const addMessage = data => {
-            console.log(data);
             this.setState({ messages: [...this.state.messages, data] });
-            console.log(this.state.messages);
         };
 
         const userConnected = data => {
-            console.log(data);
             if (data[data.length-1] !== this.props.username) {
                 const msg = { 
                     'username': this.props.secret_name, 
@@ -51,7 +56,6 @@ class Chat extends Component {
                     users: data
                 });
             }
-            console.log(this.state.users);
         };
 
         const userDisconnected = data => {
@@ -126,6 +130,7 @@ class Chat extends Component {
                     <input 
                         type="text"
                         className="input" 
+                        maxlength="150"
                         value={this.state.message}
                         onChange={this.handleChange} 
                     />

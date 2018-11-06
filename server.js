@@ -23,7 +23,6 @@ app.post('/userExist', function(req, res){
 });
 
 app.post('/newRoom', function(req, res){
-    console.log(req.body);
     const { roomName, password } = req.body;
     if(rooms[roomName]) {
         res.json(false);
@@ -36,7 +35,6 @@ app.post('/newRoom', function(req, res){
 });
 
 app.post('/enterRoom', function(req, res){
-    console.log(req.body);
     const { roomName, password } = req.body;
     let success = "wrongPassword";
     if (!rooms[roomName]) {
@@ -59,9 +57,6 @@ io.on('connection', function(socket) {
     const chatname = socket.handshake.query.chatname;
     const username = socket.handshake.query.username;
 
-    console.log(username);
-    console.log(chatname);
-
     socket.join(chatname);
 
     rooms[chatname]['users'] = [...rooms[chatname]['users'], username];
@@ -74,10 +69,8 @@ io.on('connection', function(socket) {
     
     socket.on('disconnect', function() {
         rooms[chatname]['users'] = rooms[chatname]['users'].filter(item => item !== username);
-        console.log(rooms[chatname]['users']);
         if(rooms[chatname]['users'].length === 0 && chatname != 'public-chat') {
             delete rooms[chatname];
-            console.log(`room ${chatname} was deleted`);
         } else {
             io.to(chatname).emit('disconnect', { 'users': rooms[chatname]['users'], 'user': username });
         }

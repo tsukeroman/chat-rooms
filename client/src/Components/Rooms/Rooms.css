@@ -61,26 +61,9 @@
     border-radius: 50px;
 }
 
-.infoErr {
+.Err {
     padding-top: 7px;
     font-size: 15px;
     color: darkred;
 }
 
-.passErr {
-    padding-top: 7px;
-    font-size: 15px;
-    color: darkred;
-}
-
-.nameErr {
-    padding-top: 7px;
-    font-size: 15px;
-    color: darkred;
-}
-
-.existErr {
-    padding-top: 7px;
-    font-size: 15px;
-    color: darkred;
-}

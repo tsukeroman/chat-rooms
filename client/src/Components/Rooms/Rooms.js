@@ -2,10 +2,16 @@ import React, { Component } from 'react';
 import './Rooms.css';
 import uuid from 'uuid';
 import Room from '../Room/Room';
+import PropTypes from 'prop-types';
 
 class Rooms extends Component {
-  constructor(props) {
-    super(props);
+    static propTypes = {
+        backToMain: PropTypes.func,
+        privateName: PropTypes.func
+      };  
+
+    constructor(props) {
+        super(props);
 
     this.state = {
         toRoom: '',
@@ -29,10 +35,18 @@ class Rooms extends Component {
 
   handleInputChange = (event) => {
       if (event.target.name === "roomName") {
-          this.setState({ roomName: event.target.value })
+            this.setState({ 
+                roomName: event.target.value,
+                existErr: false,
+                noInfoErr: false
+            })
       } else {
           if (event.target.name === "password") {
-              this.setState({ password: event.target.value, passErr: false })
+            this.setState({ 
+                password: event.target.value, 
+                passErr: false,
+                noInfoErr: false
+            })
           }
       }
   }
@@ -45,7 +59,6 @@ class Rooms extends Component {
 
   createRoom = (event) => {
     event.preventDefault();
-    //console.log(this.state.roomName);
 
     if (this.state.roomName === '' || this.state.password === '') {
         this.setState({ noInfoErr: true });
@@ -101,16 +114,13 @@ class Rooms extends Component {
         .then(res => res.json())
         .then(res => {
             if (res.success === 'Ok') {
-                console.log('Connected :P');
                 this.props.privateName(this.state.roomName);
             } else {
                 if (res.success === 'wrongPassword') {
-                    console.log('Wrong password :/');
                     this.setState({
                         passErr: true
                     })
                 } else {
-                    console.log('Room doesnt esixt any more :/');
                     this.setState({
                         existErr: true
                     })
@@ -140,6 +150,7 @@ class Rooms extends Component {
                         CREATE ROOM
                         <form onSubmit={this.createRoom}>
                             <input 
+                                placeholder="Write room's name here"
                                 type="text" 
                                 value={this.state.roomName}
                                 name="roomName"
@@ -147,6 +158,7 @@ class Rooms extends Component {
                             />
                             <br />
                             <input 
+                                placeholder="Choose a password"
                                 type="password" 
                                 value={this.state.password}
                                 name="password"
@@ -154,7 +166,7 @@ class Rooms extends Component {
                             />
                             <br />
                             {this.state.noInfoErr ? 
-                                <div className="infoErr">Submit room name and password</div>
+                                <div className="Err">Submit room name and password</div>
                                 :
                                 <div></div>    
                             }
@@ -175,7 +187,7 @@ class Rooms extends Component {
                             
                         </form>
                         {this.state.nameErr ?
-                            <div className="nameErr">
+                            <div className="Err">
                                 A room with this name is already exist,
                                 <br />
                                 please choose another name.
@@ -192,7 +204,8 @@ class Rooms extends Component {
                     <div className="ProceedContent">
                         <form onSubmit={this.enterRoom}>
                             <p>{this.state.roomName}</p>
-                            <input 
+                            <input
+                                placeholder="Enter your password..."
                                 type="password" 
                                 value={this.state.password}
                                 name="password"
@@ -217,14 +230,14 @@ class Rooms extends Component {
                             </button>
                         </form>
                         {this.state.passErr ?
-                            <div className="passErr">
+                            <div className="Err">
                                 The password is incorrect
                             </div>
                             :
                             null
                         }
                         {this.state.existErr ?
-                            <div className="existErr">
+                            <div className="Err">
                                 This room doesn't exist any more.
                             </div>
                             :

@@ -1,7 +1,12 @@
 import React, { Component } from 'react';
 import './ChooseName.css';
+import PropTypes from 'prop-types';
 
 class ChooseName extends Component {
+  static propTypes = {
+    submitName: PropTypes.func
+  };
+
   constructor(props) {
     super(props);
 

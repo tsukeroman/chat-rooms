@@ -1,7 +1,12 @@
 import React, { Component } from 'react';
 import './ChooseType.css';
+import PropTypes from 'prop-types';
 
-class ChooseName extends Component {
+class ChooseType extends Component {
+  static propTypes = {
+    onPrivate: PropTypes.func,
+    onPublic: PropTypes.func
+  };
 
   render() {
     return (
@@ -13,4 +18,4 @@ class ChooseName extends Component {
   }
 }
   
-  export default ChooseName;
+  export default ChooseType;
