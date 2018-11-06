@@ -58,6 +58,7 @@ class ChooseName extends Component {
   render() {
     return (
       <div className="Main">
+        <div class="appName">Chat Rooms</div>
         <p> To start chatting please submit an username </p>
         <form className="NameForm" onSubmit={this.handleSubmit}>
           <input 
