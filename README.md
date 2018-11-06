@@ -1,6 +1,6 @@
 # chat-rooms
 
-Chat-Rooms is a chat web app that allows to chat in a public room, as well as in private rooms that are secured by a password.
+Chat-Rooms is a web chat app that allows to chat in a public room, as well as in private rooms that are secured by a password.
 ________________________________________
 
 I deployed Chat-Rooms to Heroku, you can visit the app at:
